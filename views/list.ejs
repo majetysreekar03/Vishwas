@@ -1,0 +1,100 @@
+<% layout('layout/boilerplate') %>
+
+    <style>
+       body {
+            background-color: #EFFFFD;
+        }
+
+        .displaycard:hover {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            position: relative;
+            bottom: 3px;
+        }
+
+        a:link {
+            text-decoration: none;
+        }
+    </style>
+
+                <% if(all.length==0){ %>
+                    <div class="text-center">
+                        <img src="/stylesheets/empty.png" style="margin-top:10vh; height:60vh;" ></img>
+                         <p style="font-weight:500;color: rgb(139, 138, 138);">Sorryy!!! No Services Aavailable Right Now . Please Come Back Later</p>
+                        </div>
+                    <% } else{ %>
+                        <div id="map" style="height: 500px; width: 100%;" class="mb-4"></div>
+                        <div class="container">
+                            <div class="row ms-auto me-auto ">
+
+
+                                <% for(let c of all){ %>
+
+                                    <div style="margin-top:10px; margin-bottom:10px" class="col-12 col-md-6 col-lg-4">
+                                        <div id="discard" class="card displaycard" style="width:100%;">
+                                            <img class="card-img-top"
+                                                src="<%= c.images.length>0 ? c.images[0].url : '' %>"
+                                                style="height: 32vh;" alt="Card image cap">
+
+
+                                                <% var lo = '';
+                                                lo = c.location.charAt(0).toUpperCase() + c.location.toString().slice(1);
+                                                 %> 
+                                            <div class="card-body">
+                                                <h5 class="card-title" style="font-size: 20px; font-weight: 500;">
+                                                    <%= c.name %>
+                                                </h5>
+                                                <p class="card-text">
+                                                    <i class="material-icons"
+                                                        style="font-size:22px;position: relative;top: 5px;right: 4px;">place</i>
+                                                    <span style="position: relative;right: 5px;">
+                                                        <%= lo %>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                            
+                                            <% 
+                                            var avgRating=0;
+                                             if (c.reviews.length> 0) {
+                                                 var len = c.reviews.length;
+                                                c.reviews.forEach((obj) => {
+                                                avgRating += obj.rating;
+                                                });
+                                                avgRating /= len;
+                                                }
+                                                else avgRating = -1;
+
+                                                %>
+                                                <ul class="list-group list-group-flush ">
+                                                    <li class="list-group-item">
+                                                        <% if(avgRating !== -1){ %> 
+                                                        <span
+                                                            style="color: gold;font-size: large;position: relative; right: 4px;">&starf;</span>
+                                                        <span style="position: relative;right: 6px;"><%= avgRating.toFixed(1) %>   (<%= len %>) </span>
+                                                        <% }else{ %> 
+                                                            <span style="position: relative;right: 6px;"> <span style="font-size: 20px;">&#128513;</span> Be the first to rate </span>
+                                                            <% } %> 
+                                                        <span
+                                                            style="margin-left:10px; margin-right:18px; font-size: 25px; position:relative; bottom:3.1px; left:5px;">
+                                                            . </span> <span> &#128222; <%= c.contact %>  </span>
+                                                    </li>
+                                                </ul>
+                                                <div class="text-center card-body viewmore">
+                                                    <a href="/show/<%= c.id %>">View More</a>
+                                                </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+
+
+                            </div>
+                        </div>
+                        <% } %>
+
+
+
+                            <script>
+                                const mapToken = '<%- process.env.MAPBOX_TOKEN %>'; // So when this runs, it will replace 'process.env.MAPBOX_TOKEN' with the value of it.
+                                const placesList = { features: <%- JSON.stringify(all) %>} // passing ALL campgrounds to the const named campgroundsList into JS, so that we can access all of these in clusterMaps.js with name 'campgroundsList'. As the data must be an array of 'features' property we made an object so that we gave key as 'features' and value as complete set of campground details and mapbox will take the geometry from each object of the array.
+                            // in this route all campgrounds are sent via name campList, so we should use this here.
+                            </script>
+                            <script src="/javascript/clusterMaps.js"></script>

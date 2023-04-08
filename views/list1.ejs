@@ -1,0 +1,92 @@
+<% layout('layout/boilerplate') %>
+
+<!-- <style>
+    .displaycard:hover {
+        border-style: solid;
+        border-width: 1.5px;
+        border-color: rgb(172, 166, 166);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    a:link {
+        text-decoration: none;
+    }
+</style> -->
+
+
+<div id="map" style="height: 500px; width: 100%;"></div>
+
+
+    <% if(currentUser !==undefined) {%>
+        <a href="/addPlace">Add a place</a>
+        <br>
+        <br>
+        <a href="/auth/logout">Logout</a>
+        <br>
+        <br>
+        <% }else{ %>
+            <a href="/auth/google">Login</a>
+            <br>
+            <br>
+            <% } %>
+
+
+
+
+
+            
+
+
+
+
+                <% if(all.length==0){ %>
+                    <h2>NOTHING TO DISPLAY</h2>
+                    <% }else{ %>
+                        <% for(let c of all){ %>
+
+                            <%# for(let img of c.images){ %>
+                                <!-- <img src="<%#= img.url%>" alt="No pic" width="100px" height="100px"> -->
+                                <%# } %>
+
+                                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                                        <div class="carousel-inner">
+                                            <% c.images.forEach((img, i)=> { %>
+                                                <div class="carousel-item <%= i=== 0 ? 'active' : ''%>">
+                                                    <img src="<%= img.url %>" class="d-block" alt="" width="200px"
+                                                        height="200px">
+                                                </div>
+                                                <% }) %>
+                                        </div>
+                                        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                      <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                      <span class="visually-hidden">Next</span>
+                                    </button> -->
+                                    </div>
+
+
+
+
+
+
+                                    Name: <%= c.name %>
+                                        <br>
+                                        Location: <%= c.location %>
+                                            <br>
+                                            <a href="/show/<%= c.id %>">View</a>
+                                            <br>
+                                            <br>
+                                            <% } %>
+                                                <% } %>
+
+
+
+                                                <script>
+                                                    const mapToken = '<%- process.env.MAPBOX_TOKEN %>'; // So when this runs, it will replace 'process.env.MAPBOX_TOKEN' with the value of it.
+                                                    const placesList = { features: <%- JSON.stringify(all) %>} // passing ALL campgrounds to the const named campgroundsList into JS, so that we can access all of these in clusterMaps.js with name 'campgroundsList'. As the data must be an array of 'features' property we made an object so that we gave key as 'features' and value as complete set of campground details and mapbox will take the geometry from each object of the array.
+                                                    // in this route all campgrounds are sent via name campList, so we should use this here.
+                                                  </script>
+                                                  <script src="/javascript/clusterMaps.js"></script>

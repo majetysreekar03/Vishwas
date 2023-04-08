@@ -1,0 +1,136 @@
+<% layout('layout/boilerplate') %>
+
+
+
+    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <% place.images.forEach((img, i)=> { %>
+                <div class="carousel-item <%= i=== 0 ? 'active' : ''%>">
+                    <img src="<%= img.url %>" class="d-block" alt="" width="200px" height="200px">
+                </div>
+                <% }) %>
+        </div>
+        <!-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+  <span class="visually-hidden">Previous</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+  <span class="visually-hidden">Next</span>
+</button> -->
+    </div>
+
+    <div id='map' style=' height: 300px; width: 100%; background-color: black;' class='mb-1'></div>
+
+
+    Name: <%= place.name %>
+        <br>
+        Location: <%= place.location %>
+            <br>
+            Description: <%= place.description %>
+                <br>
+                Category: <%= place.category %>
+                    <br>
+                    Owner: <%= place.owner.name %>
+                        <br>
+                        <% if( currentUser && place.owner.id==currentUser.id) {%>
+                            <a href="/place/<%= place.id %>">Update</a>
+                            <form action="/place/<%= place.id %>?_method=DELETE" method="post">
+                                <button type="submit">Delete</button>
+                            </form>
+                            <br>
+                            <% } %>
+
+                                <br>
+
+
+                                <% if(currentUser){ %>
+                                    <h2>Add a Review</h2>
+
+                                    <form action="/addReview/<%= place.id %>" method="POST" class="mb-3"
+                                        style="width: 90%;" novalidate>
+
+                                        <fieldset class="starability-grow">
+
+                                            <input type="radio" id="first-rate1" name="review[rating]" value="1"
+                                                checked />
+                                            <label for="first-rate1" title="Terrible">1 star</label>
+                                            <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                            <label for="first-rate2" title="Not good">2 stars</label>
+                                            <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                            <label for="first-rate3" title="Average">3 stars</label>
+                                            <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                            <label for="first-rate4" title="Very good">4 stars</label>
+                                            <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                            <label for="first-rate5" title="Amazing">5 stars</label>
+
+                                        </fieldset>
+
+                                        <div class="mb-3">
+                                            <label for="body" class="form-label">Review</label>
+                                            <textarea class="form-control" style="min-width: 100%" name="review[body]"
+                                                id="body" cols="30" rows="5" required></textarea>
+                                            <div class="valid-feedback">
+                                                Looks Great!
+                                            </div>
+                                            <div class="invalid-feedback">
+                                                Please leave a review.
+                                            </div>
+                                        </div>
+
+                                        <button type="submit" class="btn-success btn">Add</button>
+                                    </form>
+
+                                    <% } else{%>
+                                        <div class="alert alert-warning m-2 text-center" role="alert">
+                                            <% if(place.reviews.length>0) { %>
+                                                <h6>Login to add review.</h6>
+                                                <% }else{ %>
+                                                    <h6>Login! to be the first to review.</h6>
+                                                    <% }%>
+                                        </div>
+                                        <% } %>
+
+
+
+                                            <!-- Display reviews:-->
+                                            <%if(place.reviews.length>0) {%>
+                                                <h4>Reviews:</h4>
+                                                <%}%>
+                                                    <div class="mb-3 ">
+                                                        <% for(let re of place.reviews){ %>
+                                                            <div class="card mb-3 p-2 border-light">
+                                                                <h5 class="card-title ">
+                                                                    <%= re.author.name %>
+                                                                </h5>
+                                                                <h6 class="starability-result"
+                                                                    data-rating="<%= re.rating %>">
+                                                                    Rated: <%= re.rating %> stars
+                                                                        <!--This text is not shown to use imp for self accessibilty purposes -->
+                                                                </h6>
+                                                                <!-- <h5 class="card-subtitle text-muted ">By <%= re.author.username %> </h5> -->
+                                                                <p class="card-text">
+                                                                    <%= re.body %>
+                                                                </p>
+                                                                <% if (currentUser && re.author.equals(currentUser._id) ){%>
+                                                                    <form
+                                                                        action="/review/<%= place.id %>/delete/<%= re.id %>?_method=DELETE"
+                                                                        method="post">
+                                                                        <button type="submit"
+                                                                            class="btn btn-danger">Delete</button>
+                                                                    </form>
+                                                                    <% } %>
+                                                            </div>
+                                                            <% } %>
+                                                    </div>
+
+
+
+                                                    <script>
+                                                        const mapToken = '<%- process.env.MAPBOX_TOKEN %>'; // So when this runs, it will replace 'process.env.MAPBOX_TOKEN' with the value of it.
+                                                    </script>
+
+                                                    <script>
+                                                        const companyPlace = <%- JSON.stringify(place) %>
+                                                    </script>
+                                                    <script src="/javascript/maps.js"></script>

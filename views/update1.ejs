@@ -1,0 +1,48 @@
+<% layout('layout/boilerplate') %>
+
+    <form action="/place/<%= place.id %>?_method=PUT" method="post" enctype="multipart/form-data"> 
+      
+
+        <label for="name1">Name</label>
+        <input type="text" name="name" id="name1" value="<%= place.name %>">
+
+        <label for="location1">Location</label>
+        <input type="text" name="location" id="location1" value="<%=  place.location %>">
+
+        <label for="description1">Description</label>
+        <textarea name="description" id="description1" cols="30" rows="10"><%= place.description %></textarea>
+
+        <label for="contact1">Contact:</label>
+        <input type="number" name="contact" id="contact1" value="<%= place.contact %>">
+
+        <label for="category1">Category</label>
+        <select name="category" id="category1">
+            <option value="hotel" <%=place.category ==='hotel' ? 'selected' : '' %>>Hotel</option>
+            <option value="restaurant" <%=place.category ==='restaurant' ? 'selected' : '' %>>Restaurant</option>
+            <option value="theater" <%=place.category ==='theater' ? 'selected' : '' %>>Theater</option>
+            <option value="building" <%=place.category ==='building' ? 'selected' : '' %>>Building</option>
+            <option value="park" <%=place.category ==='park' ? 'selected' : '' %>>Park</option>
+            <option value="others" <%=place.category ==='others' ? 'selected' : '' %>>Others</option>
+        </select>
+
+        <input type="file" name="images" id="images" multiple>
+
+
+        <div class="mb-3">
+            <p>Select images you want to delete.</p>
+            <% place.images.forEach(function(img, i){ %>                   
+                <img src="<%= img.url %>" alt="" class="img-thumbnail m-1">
+                <div class="form-check-inline">
+                    <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">  <!-- All checkbox have a same name ('deleteImages[]'), now if we check any checkbox, its value is added to deleteImages array.
+                        Now if we check by console.log(req.body) (inside updateCamp in controllers) we see those values are added into deleteImages array. -->                
+                </div>
+                <!-- We can add label too if we want--><label for="image-<%= i %>"></label> <!-- Instead of calling 'img.url' as src, we call 'img.thumbnail' as then we can apply transformation to it.-->
+                <% }) %>
+        </div>
+
+
+        <button type="submit">Update</button>
+
+        <a href="/showAll">Back to Main page</a>
+
+    </form>

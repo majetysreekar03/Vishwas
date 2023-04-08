@@ -1,0 +1,112 @@
+<% layout('layout/boilerplate') %>
+
+<style>
+     body {
+            background-color: #EFFFFD;
+        }
+        
+</style>
+
+        <div class="container col-lg-6 col-md d-flex flex-column justify-content-center position-relative border border-light py-2"
+        style=" height: auto;">
+        <div class="card shadow mb-5">
+
+            <div class="card-body">
+
+                <h4 class="card-title text-center" style="font-family: monospace;">Add Place</h4>
+
+                <form action="/addPlace" method="post" enctype="multipart/form-data"
+                    class="needs-validation my-2" novalidate>
+
+                    <div class="form-group mb-2">
+                        <label for="name1">Name</label>
+                        <input type="text" class="form-control" name="name" id="name1" value="<%= name.length != 0 ? name : '' %>"
+                            required>
+                        <div class="valid-feedback">
+                            Looks Great!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please name the place.
+                        </div>
+                    </div>
+
+
+                    <div class="form-group mb-2">
+                        <label for="location1">Location</label>
+                        <input type="text" class="form-control" name="location" id="location1"
+                        value="<%= location.length != 0 ? location : '' %>" required>
+                        <div class="valid-feedback">
+                            Looks Great!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please add the location.
+                        </div>
+                    </div>
+
+
+
+                    <div class="form-group mb-2">
+                        <label for="description1">Description</label>
+                        <textarea class="form-control" id="description1" rows="3" name="description"
+                            required><%=description.length!=0?description:''%></textarea>
+                        <div class="valid-feedback">
+                            Looks Great!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide a description about the place.
+                        </div>
+                    </div>
+
+
+                    <div class="form-group mb-2">
+                        <label for="contact1">Contact:</label>
+                        <input type="number" class="form-control" name="contact" id="contact1"
+                        value="<%= contact != 0 ? contact : '' %>" required>
+                        <div class="valid-feedback">
+                            Looks Great!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide contact details.
+                        </div>
+                    </div>
+
+
+                    <div class="form-group mb-3">
+                        <label for="category1">Category</label>
+                        <select class="form-select"  name="category" id="category1" >
+
+                            <option value="hotel" <%=category==='hotel' ? 'selected' : '' %>>Hotel</option>
+                            <option value="restaurant" <%=category==='restaurant' ? 'selected' : '' %>>Restaurant
+                            </option>
+                            <option value="theater" <%=category==='theater' ? 'selected' : '' %>>Theater</option>
+                            <option value="building" <%=category==='building' ? 'selected' : '' %>>Building
+                            </option>
+                            <option value="park" <%=category==='park' ? 'selected' : '' %>>Park</option>
+                            <option value="others" <%=category==='others' ? 'selected' : '' %>>Others</option>
+                        </select>
+                    </div>
+
+
+
+                    <div class="input-group mb-3 custom-file">
+                        <input type="file" class="form-control" id="images" name="images" multiple required>
+                        <label for="images" class="custom-file-label form-control"></label>
+                        <div class="valid-feedback">
+                            Looks Great!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please share few clicks of the place.
+                        </div>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-success my-2">Add</button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+    </div>
